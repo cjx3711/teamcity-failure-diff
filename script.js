@@ -61,12 +61,5 @@ if ( typeof failures != "object" || failures.length == 0 || !branch || !build ) 
     }
     chrome.storage.local.set({branches: branches});
     console.log("Branches set", branches);
-
-    chrome.storage.local.get(key, function(data) {
-      console.log("Getting data key");
-      if(typeof data[key] == "object") {
-        console.log(data[key]);
-      }
-    });
   });
 }

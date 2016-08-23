@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style=''>
+<html>
   <head>
     <script src='jquery-3.1.0.slim.min.js'></script>
     <script src="bootstrap/bootstrap.min.js"></script>
@@ -11,7 +11,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
-        Differ
+        <h2>Differ</h2>
         <button id="reset" class="btn-small btn-danger pull-right">reset</button>
       </div>
       </div>
@@ -31,6 +31,14 @@
         </div>
         <div class="col-xs-12">
           <div id="sameBranch" class="alert alert-danger" style="display:none" role="alert">Branches can't be the same.</div>
+        </div>
+      </div>
+      <div id="diffPanel" class="row" style="display:none">
+        <div class="col-xs-12">
+          <h3>Differences</h3>
+          <div id="differences">
+
+          </div>
         </div>
       </div>
     </div>
