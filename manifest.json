@@ -16,11 +16,6 @@
   },
   "permissions": [
     "activeTab",
-    "storage",
-    "https://ajax.googleapis.com/"
-  ],
-  "background": {
-    "persistent": true,
-    "scripts": ["background.js"]
-  }
+    "storage"
+  ]
 }
