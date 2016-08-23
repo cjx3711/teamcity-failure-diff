@@ -1,18 +1,11 @@
 window.branches = [];
 window.branchData = [];
+
+window.onload = onWindowLoad;
+
 function onWindowLoad() {
   var message = $('#message');
   var failures = $('#failures');
-
-  // var windowVariables = retrieveWindowVariables(["failureData"]);
-  console.log("Popup JS running");
-  // message.text("Test stuff");
-
-  chrome.storage.local.get("failures", function(data) {
-    if(typeof data.failures != "undefined") {
-      failures.val(JSON.stringify(data.failures))
-    }
-  });
 
   chrome.storage.local.get("branches", function(data) {
     console.log("Branches", data);
@@ -22,24 +15,50 @@ function onWindowLoad() {
       getBranchData();
     }
   });
-
-
 }
 
 function getBranchData () {
+  var completeData = 0;
   for ( var i = 0 ; i < window.branches.length; i++ ) {
     var branch = window.branches[i];
     var key = branch + "-data";
     chrome.storage.local.get(key, function(data) {
       if(typeof data[key] == "object") {
-        window.branchData.push(data[key]);
+        window.branchData[branch] = data[key];
         console.log("Key " + key + " found");
       } else {
         console.log("Key " + key + " not found");
+      }
+      completeData++;
+      if ( completeData >= window.branches.length ) {
+        allDataRetrieved();
       }
     });
   }
 }
 
+function allDataRetrieved() {
+  console.log("All data retrieved");
+  console.log(window.branches);
+  console.log(window.branchData);
 
-window.onload = onWindowLoad;
+  var options = [];
+  for ( var i = 0 ; i < window.branches.length; i++ ) {
+    var branch = window.branches[i];
+    var text = branch;
+    var branchData = window.branchData[branch];
+    if ( branchData ) {
+      text = text + " - " + branchData.build;
+    }
+    options.push( {value: branch, text: text });
+  }
+  setSelectOptions("#compareFrom", options);
+}
+
+
+function setSelectOptions(selectSelector, options) {
+  var $selector = $(selectSelector);
+  for ( var i = 0 ; i < options.length; i++ ) {
+    $selector.append("<option value='"+options[i].value+"'>"+options[i].text+"</option>")
+  }
+}
