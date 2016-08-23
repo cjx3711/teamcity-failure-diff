@@ -14,24 +14,13 @@ function onWindowLoad() {
   });
 }
 
-function getBranchData () {
-  var completeData = 0;
-  for ( var i = 0 ; i < window.branches.length; i++ ) {
-    var branch = window.branches[i];
-    var key = branch + "-data";
-    chrome.storage.local.get(key, function(data) {
-      if(typeof data[key] == "object") {
-        window.branchData[branch] = data[key];
-        console.log("Key " + key + " found");
-      } else {
-        console.log("Key " + key + " not found");
-      }
-      completeData++;
-      if ( completeData >= window.branches.length ) {
-        allDataRetrieved();
-      }
-    });
-  }
+function getBranchData() {
+  chrome.storage.local.get("branchData", function(data) {
+    if(typeof data.branchData == "object") {
+      window.branchData = data.branchData;
+    }
+    allDataRetrieved();
+  });
 }
 
 function allDataRetrieved() {
@@ -51,6 +40,23 @@ function allDataRetrieved() {
   }
   setSelectOptions("#compareFrom", options);
   setSelectOptions("#compareTo", options);
+
+  $("#diffIt").click( function() {
+    var fromBranch = $("#compareFrom").val();
+    var toBranch = $("#compareTo").val();
+    console.log(fromBranch, toBranch);
+    if ( fromBranch == toBranch ) {
+      $("#sameBranch").show();
+    } else {
+      $("#sameBranch").hide();
+    }
+  })
+
+  $("#reset").click ( function() {
+    chrome.storage.local.clear(function() {
+      alert("Data cleared");
+    });
+  });
 }
 
 

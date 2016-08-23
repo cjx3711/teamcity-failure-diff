@@ -36,32 +36,37 @@ if ( typeof failures != "object" || failures.length == 0 || !branch || !build ) 
   console.log("Failed to scrape the data");
 } else {
   console.log("Data scraped");
+  var branchData = {};
   // Save the data
-  var key = branch + "-data";
-  var data = {};
-  data[key] = {
-    branch: branch,
-    failures: failures,
-    build: build
-  };
-  chrome.storage.local.set(data);
+  chrome.storage.local.get("branchData", function(data) {
+    if(typeof data.branchData == "object") {
+      branchData = data.branchData
+    }
+    branchData[branch] = {
+      branch: branch,
+      failures: failures,
+      build: build
+    };
+    chrome.storage.local.set({branchData: branchData});
+  });
+  console.log("Saved ", branch);
 
   var branches = [];
   chrome.storage.local.get("branches", function(data) {
     if(typeof data.branches == "object") {
       branches = data.branches
     }
-  });
-  if ( !branches.includes(branch) ) {
-    branches.push(branch);
-  }
-  chrome.storage.local.set({branches: branches});
-  console.log("Branches set", branches);
-
-  chrome.storage.local.get(key, function(data) {
-    console.log("Getting data key");
-    if(typeof data[key] == "object") {
-      console.log(data[key]);
+    if ( !branches.includes(branch) ) {
+      branches.push(branch);
     }
+    chrome.storage.local.set({branches: branches});
+    console.log("Branches set", branches);
+
+    chrome.storage.local.get(key, function(data) {
+      console.log("Getting data key");
+      if(typeof data[key] == "object") {
+        console.log(data[key]);
+      }
+    });
   });
 }

@@ -10,14 +10,27 @@
   <body style="width:600px;">
     <div class="container-fluid">
       <div class="row">
+        <div class="col-xs-12">
         Differ
+        <button id="reset" class="btn-small btn-danger pull-right">reset</button>
+      </div>
       </div>
       <div class="row">
         <div class="col-xs-6">
+          <label for="compareFrom">Base</label>
           <select class="form-control" id="compareFrom"></select>
         </div>
         <div class="col-xs-6">
+          <label for="compareTo">Branch</label>
           <select class="form-control" id="compareTo"></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button id="diffIt" class="form-control btn btn-success">Diff it</button>
+        </div>
+        <div class="col-xs-12">
+          <div id="sameBranch" class="alert alert-danger" style="display:none" role="alert">Branches can't be the same.</div>
         </div>
       </div>
     </div>
