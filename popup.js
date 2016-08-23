@@ -4,13 +4,10 @@ window.branchData = [];
 window.onload = onWindowLoad;
 
 function onWindowLoad() {
-  var message = $('#message');
-  var failures = $('#failures');
 
   chrome.storage.local.get("branches", function(data) {
     console.log("Branches", data);
     if(typeof data.branches != "undefined") {
-      message.html(data.branches.join("<br/>"));
       branches = data.branches;
       getBranchData();
     }
@@ -53,6 +50,7 @@ function allDataRetrieved() {
     options.push( {value: branch, text: text });
   }
   setSelectOptions("#compareFrom", options);
+  setSelectOptions("#compareTo", options);
 }
 
 

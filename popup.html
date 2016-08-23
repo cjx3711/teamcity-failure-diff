@@ -2,11 +2,24 @@
 <html style=''>
   <head>
     <script src='jquery-3.1.0.slim.min.js'></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
     <script src='popup.js'></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap-theme.min.css">
   </head>
-  <body style="width:400px;">
-    <div id='message'>Message</div>
-    <textarea id='failures'></textarea>
-    <select id="compareFrom"></select>
+  <body style="width:600px;">
+    <div class="container-fluid">
+      <div class="row">
+        Differ
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <select class="form-control" id="compareFrom"></select>
+        </div>
+        <div class="col-xs-6">
+          <select class="form-control" id="compareTo"></select>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
