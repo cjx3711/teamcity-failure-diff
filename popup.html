@@ -6,14 +6,43 @@
     <script src='popup.js'></script>
     <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap-theme.min.css">
+    <style>
+      small#help {
+        cursor: pointer;
+      }
+    </style>
   </head>
-  <body style="width:600px;">
+  <body style="width:600px; padding:20px">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-xs-12">
-        <h2>Differ</h2>
-        <button id="reset" class="btn-small btn-danger pull-right">reset</button>
+        <div class="col-xs-8">
+          <h3>Differ <small id="help">help</small></h3>
+        </div>
+        <div class="col-xs-4">
+          <button id="reset" style="margin-top:15px;" class="btn-small btn-danger pull-right">delete data</button>
+        </div>
       </div>
+      <div id="helpPanel" class="row">
+        <div class="col-xs-12 well">
+          <h4>Help me</h4>
+          <p>
+            This is a small extension that takes the failing tests of two different teamcity pages and performs a diff on it.
+          </p>
+          <p>
+            <strong>Useage</strong>
+            <ol>
+              <li>
+                Open the teamcity pages you want to compare. It will automatically collect the data upon opening.
+              </li>
+              <li>
+                Click this popup (you already did!), and select the two branches you want to compare from the dropdowns. (If the branches aren't present, just reopen the popup.)
+              </li>
+              <li>
+                The script will match the tests and give the differences between both branches. (Failures that exist on both are not shown.)
+              </li>
+            </ol>
+          </p>
+        </div>
       </div>
       <div class="row">
         <div class="col-xs-6">
@@ -35,7 +64,7 @@
       </div>
       <div id="diffPanel" class="row" style="display:none">
         <div class="col-xs-12">
-          <h3>Differences</h3>
+          <h4>Differences</h4>
           <div id="differences">
 
           </div>

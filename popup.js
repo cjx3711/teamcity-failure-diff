@@ -65,6 +65,15 @@ function allDataRetrieved() {
       alert("Data cleared");
     });
   });
+
+  $("#help").click( function() {
+    console.log("Toggling");
+    if ( $("#helpPanel").is(":visible") ) {
+      $("#helpPanel").hide(100);
+    } else {
+      $("#helpPanel").show(100);
+    }
+  });
 }
 
 function setSelectOptions(selectSelector, options) {
