@@ -56,7 +56,7 @@ function allDataRetrieved() {
       var toBranchData = window.branchData[toBranch];
       var merged = merge(fromBranchData.failures, toBranchData.failures);
       console.log(merged);
-      generateDiffData(merged);
+      displayDiffData(merged, fromBranch, toBranch);
     }
   })
 
@@ -83,7 +83,7 @@ function setSelectOptions(selectSelector, options) {
   }
 }
 
-function generateDiffData(merged) {
+function displayDiffData(merged, leftBranch, rightBranch) {
   var $differences = $("#differences");
   $differences.html('');
   for ( var i = 0 ; i < merged.length; i++ ) {
@@ -112,6 +112,21 @@ function generateDiffData(merged) {
     $differences.append($row);
     $differences.append("<hr/>");
   }
+
+  // Generate stats
+  var total = 0;
+  var leftCount = 0;
+  var rightCount = 0;
+  for ( var i = 0 ; i < merged.length; i++ ) {
+    total += merged[i].devItems.length + merged[i].otherItems.length;
+    leftCount += merged[i].devItems.length;
+    rightCount += merged[i].otherItems.length;
+  }
+  $("#totalCount").text(total);
+  $("#leftCount").text(leftCount);
+  $("#rightCount").text(rightCount);
+  $("#leftBranch").text(leftBranch);
+  $("#rightBranch").text(rightBranch);
 }
 
 // Merging logic

@@ -10,6 +10,9 @@
       small#help {
         cursor: pointer;
       }
+      .number {
+        font-weight: bold;
+      }
     </style>
   </head>
   <body style="width:600px; padding:20px">
@@ -22,7 +25,7 @@
           <button id="reset" style="margin-top:15px;" class="btn-small btn-danger pull-right">delete data</button>
         </div>
       </div>
-      <div id="helpPanel" class="row">
+      <div id="helpPanel" class="row" style="display:none">
         <div class="col-xs-12 well">
           <h4>Help me</h4>
           <p>
@@ -65,6 +68,9 @@
       <div id="diffPanel" class="row" style="display:none">
         <div class="col-xs-12">
           <h4>Differences</h4>
+          <p>
+            <span class="number" id="totalCount"></span> differences. <code id="leftBranch"></code> has <span class="number" id="leftCount"></span>. <code id="rightBranch"></code> has <span class="number" id="rightCount"></span>.
+          </p>
           <div id="differences">
 
           </div>
