@@ -45,7 +45,8 @@ if ( typeof failures != "object" || failures.length == 0 || !branch || !build ) 
     branchData[branch] = {
       branch: branch,
       failures: failures,
-      build: build
+      build: build,
+      link: window.location.href
     };
     chrome.storage.local.set({branchData: branchData});
   });

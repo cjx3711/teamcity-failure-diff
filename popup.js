@@ -5,6 +5,25 @@ window.onload = onWindowLoad;
 
 function onWindowLoad() {
 
+  $("#reset").click ( function() {
+    chrome.storage.local.clear(function() {
+      alert("Data cleared");
+    });
+  });
+
+  $("#help").click( function() {
+    if ( $("#helpPanel").is(":visible") ) {
+      $("#helpPanel").hide(100);
+    } else {
+      $("#helpPanel").show(100);
+    }
+  });
+
+  $('body').on('click', 'a', function(){
+     chrome.tabs.create({url: $(this).attr('href')});
+     return false;
+   });
+   
   chrome.storage.local.get("branches", function(data) {
     console.log("Branches", data);
     if(typeof data.branches != "undefined") {
@@ -56,24 +75,11 @@ function allDataRetrieved() {
       var toBranchData = window.branchData[toBranch];
       var merged = merge(fromBranchData.failures, toBranchData.failures);
       console.log(merged);
-      displayDiffData(merged, fromBranch, toBranch);
+      displayDiffData(merged, fromBranch, toBranch, fromBranchData.link, toBranchData.link );
     }
   })
 
-  $("#reset").click ( function() {
-    chrome.storage.local.clear(function() {
-      alert("Data cleared");
-    });
-  });
 
-  $("#help").click( function() {
-    console.log("Toggling");
-    if ( $("#helpPanel").is(":visible") ) {
-      $("#helpPanel").hide(100);
-    } else {
-      $("#helpPanel").show(100);
-    }
-  });
 }
 
 function setSelectOptions(selectSelector, options) {
@@ -83,7 +89,7 @@ function setSelectOptions(selectSelector, options) {
   }
 }
 
-function displayDiffData(merged, leftBranch, rightBranch) {
+function displayDiffData(merged, leftBranch, rightBranch, leftLink, rightLink) {
   var $differences = $("#differences");
   $differences.html('');
   for ( var i = 0 ; i < merged.length; i++ ) {
@@ -127,6 +133,8 @@ function displayDiffData(merged, leftBranch, rightBranch) {
   $("#rightCount").text(rightCount);
   $("#leftBranch").text(leftBranch);
   $("#rightBranch").text(rightBranch);
+  $("#leftLink").attr('href', leftLink);
+  $("#rightLink").attr('href', rightLink);
 }
 
 // Merging logic
