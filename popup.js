@@ -5,50 +5,17 @@ window.onload = onWindowLoad;
 
 function onWindowLoad() {
 
-  $("#reset").click ( function() {
-    // Clear everything except the settings
-    var settings = null;
-    getSettings();
+  $("#reset").click ( resetClickHandler );
 
-    function getSettings() {
-      chrome.storage.local.get("settings", function(data) {
-        if(typeof data.branches == "object") {
-          settings = data.settings;
-        }
-        clearData();
-      });
-    }
-    function clearData() {
-      chrome.storage.local.clear(function() {
-        saveSettings();
-      });
-    }
-    function saveSettings() {
-      if ( settings ) {
-        chrome.storage.local.set({settings: settings}, function() {
-          alert("Data cleared");
-        });
-      }
-    }
+  $("#help").click( helpClickHandler );
 
-
-
-
-  });
-
-  $("#help").click( function() {
-    if ( $("#helpPanel").is(":visible") ) {
-      $("#helpPanel").hide(100);
-    } else {
-      $("#helpPanel").show(100);
-    }
-  });
-
+  // Clicking on any <a> tag will open a new tab
   $('body').on('click', 'a', function(){
      chrome.tabs.create({url: $(this).attr('href')});
      return false;
    });
 
+  // Get the branch data;
   chrome.storage.local.get("branches", function(data) {
     console.log("Branches", data);
     if(typeof data.branches != "undefined") {
@@ -225,5 +192,43 @@ function merge(develop, other) {
       }
     }
     return null;
+  }
+}
+
+
+// --------- CLICK HANDLERS -----------
+// ------------------------------------
+
+function helpClickHandler() {
+  if ( $("#helpPanel").is(":visible") ) {
+    $("#helpPanel").hide(100);
+  } else {
+    $("#helpPanel").show(100);
+  }
+}
+function resetClickHandler() {
+  // Clear everything except the settings
+  var settings = null;
+  getSettings();
+
+  function getSettings() {
+    chrome.storage.local.get("settings", function(data) {
+      if(typeof data.branches == "object") {
+        settings = data.settings;
+      }
+      clearData();
+    });
+  }
+  function clearData() {
+    chrome.storage.local.clear(function() {
+      saveSettings();
+    });
+  }
+  function saveSettings() {
+    if ( settings ) {
+      chrome.storage.local.set({settings: settings}, function() {
+        alert("Data cleared");
+      });
+    }
   }
 }
