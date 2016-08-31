@@ -6,9 +6,34 @@ window.onload = onWindowLoad;
 function onWindowLoad() {
 
   $("#reset").click ( function() {
-    chrome.storage.local.clear(function() {
-      alert("Data cleared");
-    });
+    // Clear everything except the settings
+    var settings = null;
+    getSettings();
+
+    function getSettings() {
+      chrome.storage.local.get("settings", function(data) {
+        if(typeof data.branches == "object") {
+          settings = data.settings;
+        }
+        clearData();
+      });
+    }
+    function clearData() {
+      chrome.storage.local.clear(function() {
+        saveSettings();
+      });
+    }
+    function saveSettings() {
+      if ( settings ) {
+        chrome.storage.local.set({settings: settings}, function() {
+          alert("Data cleared");
+        });
+      }
+    }
+
+
+
+
   });
 
   $("#help").click( function() {
@@ -23,7 +48,7 @@ function onWindowLoad() {
      chrome.tabs.create({url: $(this).attr('href')});
      return false;
    });
-   
+
   chrome.storage.local.get("branches", function(data) {
     console.log("Branches", data);
     if(typeof data.branches != "undefined") {
