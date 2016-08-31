@@ -19,6 +19,7 @@ function onWindowLoad() {
 
   $('body').on('click', "#choose-button", laterClickHandler );
   $('body').on('click', "#later-button", laterClickHandler );
+  $('body').on('click', "#run-setup-button", runSetupClickHandler );
 
   // Clicking on any <a> tag will open a new tab
   $('body').on('click', 'a', function(){
@@ -32,6 +33,8 @@ function onWindowLoad() {
     if(typeof data.branches != "undefined") {
       branches = data.branches;
       getBranchData();
+    } else {
+      allDataRetrieved();
     }
   });
 }
@@ -271,5 +274,12 @@ function laterClickHandler() {
   window.settings.skippedSetup = true;
   saveSettings();
   window.state = window.STATE_MAIN;
+  updateState();
+}
+
+function runSetupClickHandler() {
+  window.settings.skippedSetup = false;
+  saveSettings();
+  window.state = window.STATE_SETUP;
   updateState();
 }
