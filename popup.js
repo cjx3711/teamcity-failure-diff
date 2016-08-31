@@ -1,13 +1,24 @@
+window.STATE_LOADING = 0;
+window.STATE_SETUP = 1;
+window.STATE_MAIN = 2;
+
 window.branches = [];
 window.branchData = [];
-
+window.state = window.STATE_LOADING;
+window.settings = {
+  jiraSite: null,
+  skippedSetup: false
+};
 window.onload = onWindowLoad;
 
 function onWindowLoad() {
+  updateState();
 
-  $("#reset").click ( resetClickHandler );
+  $('body').on('click', '#reset', resetClickHandler );
+  $('body').on('click', "#help", helpClickHandler );
 
-  $("#help").click( helpClickHandler );
+  $('body').on('click', "#choose-button", laterClickHandler );
+  $('body').on('click', "#later-button", laterClickHandler );
 
   // Clicking on any <a> tag will open a new tab
   $('body').on('click', 'a', function(){
@@ -30,14 +41,37 @@ function getBranchData() {
     if(typeof data.branchData == "object") {
       window.branchData = data.branchData;
     }
+    getSettings();
+  });
+}
+
+function getSettings() {
+  chrome.storage.local.get("settings", function(data) {
+    if(typeof data.settings == "object") {
+      window.settings = data.settings;
+    } else {
+      saveSettings();
+    }
     allDataRetrieved();
   });
+}
+
+function saveSettings() {
+  chrome.storage.local.set({settings: window.settings});
 }
 
 function allDataRetrieved() {
   console.log("All data retrieved");
   console.log(window.branches);
   console.log(window.branchData);
+  console.log(window.settings);
+
+  if ( !window.settings.jiraSite && !window.settings.skippedSetup ) {
+    window.state = window.STATE_SETUP;
+  } else {
+    window.state = window.STATE_MAIN;
+  }
+  updateState();
 
   var options = [];
   for ( var i = 0 ; i < window.branches.length; i++ ) {
@@ -71,13 +105,32 @@ function allDataRetrieved() {
     }
   })
 
-
 }
 
 function setSelectOptions(selectSelector, options) {
   var $selector = $(selectSelector);
   for ( var i = 0 ; i < options.length; i++ ) {
     $selector.append("<option value='"+options[i].value+"'>"+options[i].text+"</option>")
+  }
+}
+
+function updateState() {
+  var $loadingContainer = $("#loading-container");
+  var $setupContainer = $("#setup-container");
+  var $mainContainer = $("#main-container");
+  $loadingContainer.hide();
+  $setupContainer.hide();
+  $mainContainer.hide();
+  switch ( window.state ) {
+    case window.STATE_LOADING:
+      $loadingContainer.show();
+    break;
+    case window.STATE_SETUP:
+      $setupContainer.show();
+    break;
+    case window.STATE_MAIN:
+      $mainContainer.show();
+    break;
   }
 }
 
@@ -208,27 +261,15 @@ function helpClickHandler() {
 }
 function resetClickHandler() {
   // Clear everything except the settings
-  var settings = null;
-  getSettings();
+  chrome.storage.local.clear(function() {
+    saveSettings();
+    alert("Data cleared");
+  });
+}
 
-  function getSettings() {
-    chrome.storage.local.get("settings", function(data) {
-      if(typeof data.branches == "object") {
-        settings = data.settings;
-      }
-      clearData();
-    });
-  }
-  function clearData() {
-    chrome.storage.local.clear(function() {
-      saveSettings();
-    });
-  }
-  function saveSettings() {
-    if ( settings ) {
-      chrome.storage.local.set({settings: settings}, function() {
-        alert("Data cleared");
-      });
-    }
-  }
+function laterClickHandler() {
+  window.settings.skippedSetup = true;
+  saveSettings();
+  window.state = window.STATE_MAIN;
+  updateState();
 }
